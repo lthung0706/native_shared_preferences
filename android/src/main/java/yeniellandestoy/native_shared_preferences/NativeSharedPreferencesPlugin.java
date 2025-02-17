@@ -2,6 +2,10 @@ package yeniellandestoy.native_shared_preferences;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
+
+import com.google.firebase.iid.Registrar;
+
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodChannel;
@@ -12,14 +16,15 @@ public class NativeSharedPreferencesPlugin implements FlutterPlugin {
   private static final String CHANNEL_NAME = "native_shared_preferences";
   private MethodChannel channel;
 
-  public static void registerWith(PluginRegistry.Registrar registrar) {
-    final NativeSharedPreferencesPlugin plugin = new NativeSharedPreferencesPlugin();
-    plugin.setupChannel(registrar.messenger(), registrar.context());
-  }
+  // public static void registerWith(@NonNull PluginRegistry.Registrar registrar) {
+  //   final NativeSharedPreferencesPlugin plugin = new NativeSharedPreferencesPlugin();
+  //   plugin.setupChannel(registrar.messenger(), registrar.context());
+  // }
 
   @Override
-  public void onAttachedToEngine(FlutterPlugin.FlutterPluginBinding binding) {
+  public void onAttachedToEngine(@NonNull FlutterPlugin.FlutterPluginBinding binding) {
     setupChannel(binding.getBinaryMessenger(), binding.getApplicationContext());
+
   }
 
   @Override
@@ -34,7 +39,9 @@ public class NativeSharedPreferencesPlugin implements FlutterPlugin {
   }
 
   private void teardownChannel() {
-    channel.setMethodCallHandler(null);
-    channel = null;
+        if (channel != null) {
+      channel.setMethodCallHandler(null);
+      channel = null;
+    }
   }
 }
